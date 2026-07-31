@@ -5,8 +5,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.equipment.ArmorMaterials;
-import net.minecraft.world.item.equipment.ArmorType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.vrgear.VRGearMod;
 
@@ -14,7 +13,7 @@ public class WCItems {
     public static final ResourceKey<Item> OCULUS_HEADSET_ID = key("oculus_headset");
     public static final ResourceKey<Item> OCULUS_CONTROLLER_ID = key("oculus_controller");
     public static final Item OCULUS_HEADSET = register(OCULUS_HEADSET_ID,
-            new Item(new Item.Properties().setId(OCULUS_HEADSET_ID).humanoidArmor(ArmorMaterials.LEATHER, ArmorType.HELMET)));
+            new Item(new Item.Properties().setId(OCULUS_HEADSET_ID).equippable(EquipmentSlot.HEAD)));
     public static final Item OCULUS_CONTROLLER = register(OCULUS_CONTROLLER_ID,
             new Item(new Item.Properties().setId(OCULUS_CONTROLLER_ID).stacksTo(1)));
 

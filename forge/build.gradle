@@ -42,7 +42,7 @@ unifiedPublishing {
 
         }
 
-        var CURSE_API_KEY = project.findProperty("curseforge") ?: System.getenv("curseforge")
+        var CURSE_API_KEY = providers.gradleProperty("curseforge").orNull ?: System.getenv("curseforge")
         if (CURSE_API_KEY != null) {
             curseforge {
                 token = CURSE_API_KEY
@@ -51,7 +51,7 @@ unifiedPublishing {
             }
         }
 
-        var MODRINTH_TOKEN = project.findProperty("modrinth") ?: System.getenv("modrinth")
+        var MODRINTH_TOKEN = providers.gradleProperty("modrinth").orNull ?: System.getenv("modrinth")
         if (MODRINTH_TOKEN != null) {
             modrinth {
                 token = MODRINTH_TOKEN
@@ -60,10 +60,6 @@ unifiedPublishing {
             }
         }
     }
-}
-
-sourceSets.main.resources {
-    srcDir project(":forge").file("src/generated/resources").absolutePath
 }
 
 configurations {
@@ -93,18 +89,18 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier.set("dev-shadow")
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
+    archiveClassifier.set("")
 }
 
 jar {
     duplicatesStrategy = 'include'
-    classifier "dev"
+    archiveClassifier.set("dev")
 }
 
 sourcesJar {

@@ -11,10 +11,6 @@ loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 }
 
-sourceSets.main.resources {
-    srcDir project(":forge").file("src/generated/resources").absolutePath
-}
-
 sourceSets.main.java {
     exclude "net/vrgear/client/**"
     exclude "net/vrgear/common/fabric/**"

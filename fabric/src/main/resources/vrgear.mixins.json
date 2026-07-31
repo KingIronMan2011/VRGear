@@ -1,10 +1,8 @@
 {
   "required": true,
   "package": "net.vrgear.mixin.fabric",
-  "compatibilityLevel": "JAVA_17",
-  "client": [
-    "HumanoidArmorLayerMixin"
-  ],
+  "compatibilityLevel": "JAVA_25",
+  "client": [],
   "mixins": [
   ],
   "injectors": {

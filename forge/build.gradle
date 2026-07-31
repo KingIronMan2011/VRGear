@@ -1,5 +1,4 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
     id "me.shedaniel.unified-publishing" version "0.1.+"
 }
 
@@ -22,12 +21,16 @@ loom {
             mod "vrgear"
         }
     }
+}
 
-    launches {
-        data {
-            arg "--existing", project(":common").file("src/main/resources/").absolutePath
-        }
-    }
+sourceSets.main.java {
+    exclude "net/vrgear/client/**"
+    exclude "net/vrgear/common/forge/**"
+    exclude "net/vrgear/forge/mixin/**"
+    exclude "net/vrgear/forge/ClientModBusEvents.java"
+    exclude "net/vrgear/forge/handlers/**"
+    exclude "net/vrgear/forge/data/**"
+    exclude "net/vrgear/registry/**"
 }
 
 unifiedPublishing {
@@ -36,7 +39,7 @@ unifiedPublishing {
         releaseType = "release"
         changelog = new File("${rootProject.projectDir}/changelog.html").text
         gameVersions = ["1.19.2"]
-        mainPublication tasks.remapJar
+        mainPublication tasks.jar
         gameLoaders = ["forge"]
         relations {
 
@@ -62,18 +65,9 @@ unifiedPublishing {
     }
 }
 
-configurations {
-    common
-    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
-    compileClasspath.extendsFrom common
-    runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
-}
-
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    implementation project(":common")
 }
 
 processResources {
@@ -84,23 +78,10 @@ processResources {
     }
 }
 
-shadowJar {
-    exclude "fabric.mod.json"
-    exclude "architectury.common.json"
-
-    configurations = [project.configurations.shadowCommon]
-    archiveClassifier.set("dev-shadow")
-}
-
-remapJar {
-    input.set shadowJar.archiveFile
-    dependsOn shadowJar
-    archiveClassifier.set("")
-}
-
 jar {
     duplicatesStrategy = 'include'
-    archiveClassifier.set("dev")
+    from project(":common").sourceSets.main.output
+    archiveClassifier.set("")
 }
 
 sourcesJar {
@@ -108,12 +89,6 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
-}
-
-components.java {
-    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
-        skip()
-    }
 }
 
 publishing {
